@@ -8,6 +8,7 @@ import {
   getPaymentForMerchant,
   toPaymentResponse,
 } from "./paymentsService.js";
+import { createPayoutBatch } from "./payoutsService.js";
 
 export function paymentsRouter(store: Store): Router {
   const router = Router();
@@ -34,6 +35,11 @@ export function paymentsRouter(store: Store): Router {
       () => toPaymentResponse(capturePayment(store, merchantId, req.params.id, req.body?.amountMinor)),
     );
     res.json(response);
+  });
+
+  router.post("/payouts", async (req, res) => {
+    const batch = await createPayoutBatch(store, merchantOf(req), req.body ?? {}, req.header("idempotency-key"));
+    res.status(201).json(batch);
   });
 
   return router;
