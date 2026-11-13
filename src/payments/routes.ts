@@ -2,6 +2,7 @@ import { Router } from "express";
 import { merchantOf, requireMerchant } from "../auth.js";
 import { withIdempotency } from "../idempotency.js";
 import type { Store } from "../store.js";
+import { getBalancesForMerchant } from "./balancesService.js";
 import {
   capturePayment,
   createPayment,
@@ -34,6 +35,10 @@ export function paymentsRouter(store: Store): Router {
       () => toPaymentResponse(capturePayment(store, merchantId, req.params.id, req.body?.amountMinor)),
     );
     res.json(response);
+  });
+
+  router.get("/balances", (req, res) => {
+    res.json({ balances: getBalancesForMerchant(store, merchantOf(req)) });
   });
 
   return router;
