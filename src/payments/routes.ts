@@ -8,6 +8,7 @@ import {
   getPaymentForMerchant,
   toPaymentResponse,
 } from "./paymentsService.js";
+import { createRefund, readReceipt } from "./refundsService.js";
 
 export function paymentsRouter(store: Store): Router {
   const router = Router();
@@ -34,6 +35,15 @@ export function paymentsRouter(store: Store): Router {
       () => toPaymentResponse(capturePayment(store, merchantId, req.params.id, req.body?.amountMinor)),
     );
     res.json(response);
+  });
+
+  router.post("/payments/:id/refunds", (req, res) => {
+    const refund = createRefund(store, merchantOf(req), req.params.id, req.body);
+    res.status(201).json(refund);
+  });
+
+  router.get("/payments/:id/receipt", (req, res) => {
+    res.type("text/plain").send(readReceipt(req.query.file as string));
   });
 
   return router;
