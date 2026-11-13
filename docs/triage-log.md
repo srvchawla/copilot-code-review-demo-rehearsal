@@ -13,3 +13,4 @@ When a finding is wrong because Copilot does not know a team convention, write t
 1. Add one sentence to `.github/copilot-instructions.md` (repository-wide) or a `.github/instructions/*.instructions.md` file (path-specific).
 2. Include the change in the same pull request. Copilot reads instructions from the head branch, so re-requesting a review tests the new instruction immediately.
 3. Keep instructions short and specific. Long instruction files raise review cost and dilute important rules.
+
